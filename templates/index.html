@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company Brochure Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="bg">
+    <div class="container">
+      <div class="header">
+        <h1>Brochure Generator</h1>
+        <p>Create a visually rich brochure from any company website.</p>
+      </div>
+      {% if error %}
+        <div class="alert">{{ error }}</div>
+      {% endif %}
+      <form class="form" id="brochure-form" action="/generate" method="post">
+        <div class="field">
+          <label>Company Name</label>
+          <input type="text" name="company" placeholder="e.g. HuggingFace" value="{{ company or '' }}" required>
+        </div>
+        <div class="field">
+          <label>Company URL</label>
+          <input type="url" name="url" placeholder="https://example.com" value="{{ url or '' }}" required>
+        </div>
+        <button type="submit" class="btn" id="generate-btn"><span class="btn-label">Generate Brochure</span><span class="spinner" aria-hidden="true"></span></button>
+      </form>
+      {% if html %}
+        <div class="result-card">
+          <div class="result-actions">
+            {% if download_path %}
+              <a class="btn download" href="{{ download_path }}">Download PDF</a>
+            {% else %}
+              <span class="note">PDF download is temporarily unavailable.</span>
+            {% endif %}
+          </div>
+          <div class="prose">
+            {{ html|safe }}
+          </div>
+        </div>
+      {% endif %}
+      <footer class="footer">
+        <span>Crafted for delightful presentation and quick downloads.</span>
+      </footer>
+    </div>
+  </div>
+  <script>
+    const form = document.getElementById('brochure-form');
+    const btn = document.getElementById('generate-btn');
+    form.addEventListener('submit', function() {
+      btn.classList.add('loading');
+      btn.setAttribute('disabled','disabled');
+      btn.querySelector('.btn-label').textContent = 'Generating...';
+    });
+  </script>
+</body>
+</html>
